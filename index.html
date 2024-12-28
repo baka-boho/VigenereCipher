@@ -565,15 +565,19 @@
         console.log("freq : ",freq);
         E_index= 5;
         // let shift = (maxChar.charCodeAt(0) - 'E'.charCodeAt(0) + 26) % 26;
-        let shift = (maxChar.charCodeAt(0) - 'E'.charCodeAt(0)) ;
+        let shift = abs(maxChar.charCodeAt(0) - 'E'.charCodeAt(0));
         console.log("shift : ",shift);
 
       // key += String.fromCharCode(((26 + shift) % 26) + 65);
       //handle negative shift
       if(shift<0){
-        key += String.fromCharCode(((26 - shift) % 26) +shift + 65);
-      }else{
-        key += String.fromCharCode(((26 + shift) % 26) + 65);
+        // key += String.fromCharCode(((26 - shift) % 26) +shift + 65);
+        
+        // key += String.fromCharCode(-shift - 4 + 65);
+      key += String.fromCharCode(((26 + shift) % 26) + 65);
+    }else{
+      key += String.fromCharCode(((26 + shift) % 26) + 65);
+        // key += String.fromCharCode(shift + 65);
       }
 
       }
@@ -651,9 +655,9 @@
       // key += String.fromCharCode(((26 + shift) % 26) + 65);
       //handle negative shift
       if(shift<0){
-        key += String.fromCharCode(((26 - shift) % 26) +shift + 65);
+        key += String.fromCharCode(-shift - 4 + 65);
       }else{
-        key += String.fromCharCode(((shift) % 26) + 65);
+        key += String.fromCharCode(((26 + shift) % 26) + 65);
       }
     }
     // console.log("msgs : ",msgs);
