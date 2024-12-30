@@ -565,7 +565,7 @@
         console.log("freq : ",freq);
         E_index= 5;
         // let shift = (maxChar.charCodeAt(0) - 'E'.charCodeAt(0) + 26) % 26;
-        let shift = abs(maxChar.charCodeAt(0) - 'E'.charCodeAt(0));
+        let shift = Math.abs(maxChar.charCodeAt(0) - 'E'.charCodeAt(0));
         console.log("shift : ",shift);
 
       // key += String.fromCharCode(((26 + shift) % 26) + 65);
