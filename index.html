@@ -1,739 +1,924 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vigenere Cipher</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --font-primary: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    --font-mono: 'Space Mono', 'Courier New', Courier, monospace;
-    --primary-color: #6200ea;
-    --secondary-color: #03dac6;
-    --background-color: #f5f5f5;
-    --surface-color: #ffffff;
-    --error-color: #b00020;
-    --on-primary-color: #ffffff;
-    --on-secondary-color: #000000;
-    --on-background-color: #000000;
-    --on-surface-color: #000000;
-    --on-error-color: #ffffff;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vigenere Cipher</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --font-primary: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            --font-mono: 'Space Mono', 'Courier New', Courier, monospace;
+            --primary-color: #1f6aff;
+            --secondary-color: #fffd8c;
+            --background-color: #747474;
+            --surface-color: #ffffff;
+            --error-color: #ff4c7f;
+            --on-primary-color: #ffffff;
+            --on-secondary-color: #000000;
+            --on-background-color: #000000;
+            --on-surface-color: #000000;
+            --on-error-color: #ffffff;
+        }
 
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: var(--font-primary);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
 
-  body {
-    min-height: 100vh;
-    background: var(--background-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0;
-    margin: 0;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-  }
+        body {
+            min-height: 100vh;
+            background: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            margin: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-  .container {
-    background: var(--surface-color);
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    height: 100%;
-    max-width: none;
-    max-height: none;
-    transform: none;
-    opacity: 1;
-    animation: none;
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    grid-template-rows: auto auto auto;
-    column-gap: 1rem;
-  }
+        .container {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            height: 100%;
+            max-width: none;
+            max-height: none;
+            transform: none;
+            opacity: 1;
+            animation: none;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            grid-template-rows: auto auto auto;
+            column-gap: 1rem;
+        }
 
-  h1 {
-    color: var(--primary-color);
-    text-align: left;
-    margin-bottom: 1rem;
-    font-family: var(--font-primary);
-    font-weight: 700;
-    font-size: clamp(1.8rem, 4vw, 2.5rem);
-    letter-spacing: -0.03em;
-    line-height: 1.2;
-    grid-column: 1 / 2;
-    grid-row: 1 / 2;
-  }
+        h1 {
+            color: var(--primary-color);
+            text-align: left;
+            margin-bottom: 1rem;
+            font-family: var(--font-primary);
+            font-weight: 700;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+            grid-column: 1 / 2;
+            grid-row: 1 / 2;
+        }
 
-  .input-group {
-    margin-bottom: 1.5rem;
-    position: relative;
-    transition: all 0.3s ease;
-    grid-column: 2 / 3;
-  }
+        .input-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+            grid-column: 2 / 3;
+        }
 
-  .input-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: var(--on-surface-color);
-    font-weight: 500;
-    font-size: 0.95rem;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    transform: translateY(0);
-    transition: all 0.3s ease;
-  }
+        .input-group label {
+            position: absolute;
+            top: -12px;
+            left: 10px;
+            background: var(--surface-color);
+            padding: 0 8px;
+            color: var(--primary-color);
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
 
-  .input-group textarea,
-  .input-group input {
-    width: 100%;
-    padding: 1rem;
-    border: 2px solid #e2e8f0;
-    border-radius: 4px;
-    font-family: var(--font-mono);
-    font-size: 1rem;
-    line-height: 1.6;
-    letter-spacing: 0.02em;
-    transition: all 0.3s ease;
-    background: var(--surface-color);
-    resize: none;
-  }
+        .input-group textarea,
+        .input-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            line-height: 1.6;
+            letter-spacing: 0.02em;
+            transition: all 0.3s ease;
+            background: var(--surface-color);
+            resize: none;
+        }
 
-  .input-group textarea:focus,
-  .input-group input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(98, 0, 234, 0.1);
-    transform: translateY(-2px);
-  }
+        .input-group textarea:focus,
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(98, 0, 234, 0.1);
+        }
 
-  .button-group {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-    grid-column: 1 / 2;
-    grid-row: 2 / 4;
-    flex-direction: column;
-  }
+        .input-group input:focus + label,
+        .input-group textarea:focus + label {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
 
-  button {
-    flex: 1;
-    min-width: 120px;
-    padding: 0.8rem 1.5rem;
-    border: none;
-    border-radius: 4px;
-    font-family: var(--font-primary);
-    font-weight: 600;
-    font-size: 0.95rem;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-  }
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            grid-column: 1 / 2;
+            grid-row: 2 / 4;
+            flex-direction: column;
+        }
 
-  .btn-encrypt {
-    background: var(--primary-color);
-    color: var(--on-primary-color);
-  }
+        button {
+            flex: 1;
+            /* min-width: 120px; */
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-family: var(--font-primary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
 
-  .btn-decrypt {
-    background: var(--secondary-color);
-    color: var(--on-secondary-color);
-  }
+        .btn-encrypt {
+            background: var(--primary-color);
+            color: var(--on-primary-color);
+        }
 
-  .btn-analyze {
-    background: var(--error-color);
-    color: var(--on-error-color);
-  }
+        .btn-decrypt {
+            background: var(--secondary-color);
+            color: var(--on-secondary-color);
+        }
 
-  button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  }
+        .btn-analyze {
+            background: var(--error-color);
+            color: var(--on-error-color);
+        }
 
-  button::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
-  }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
 
-  button:active::after {
-    width: 200px;
-    height: 200px;
-    opacity: 0;
-  }
+        button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
 
-  #frequencyChart {
-    width: 100%;
-    height: 300px;
-    margin-top: 1rem;
-    border-radius: 4px;
-    background: var(--surface-color);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-  }
+        button:active::after {
+            width: 200px;
+            height: 200px;
+            opacity: 0;
+        }
 
-  #frequencyChart:hover {
-    transform: scale(1.01);
-  }
+        #frequencyChart {
+            width: 100%;
+            height: 300px;
+            margin-top: 1rem;
+            border-radius: 4px;
+            background: var(--surface-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
 
-  @keyframes fadeIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+        #frequencyChart:hover {
+            transform: scale(1.01);
+        }
 
-  @media (max-width: 768px) {
-    .container {
-      padding: 1.5rem;
-      grid-template-columns: 1fr;
-      grid-template-rows: auto auto auto auto auto;
-    }
-    
-    .button-group {
-      flex-direction: row;
-      flex-wrap: wrap;
-      grid-column: 1 / 2;
-      grid-row: 4 / 5;
-    }
-    
-    button {
-      width: 100%;
-    }
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    h1 {
-      font-size: 1.8rem;
-      grid-column: 1 / 2;
-      grid-row: 1 / 2;
-      text-align: center;
-    }
-    
-    .input-group label {
-      font-size: 0.85rem;
-    }
-    
-    .input-group textarea,
-    .input-group input {
-      font-size: 0.95rem;
-    }
-    
-    button {
-      font-size: 0.85rem;
-    }
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto auto auto;
+            }
 
-    .input-group:nth-child(3) {
-      grid-column: 1 / 2;
-      grid-row: 2 / 3;
-    }
+            .button-group {
+                flex-direction: row;
+                flex-wrap: wrap;
+                grid-column: 1 / 2;
+                grid-row: 4 / 5;
+            }
 
-    .input-group:nth-child(4) {
-      grid-column: 1 / 2;
-      grid-row: 3 / 4;
-    }
+            button {
+                width: 100%;
+            }
 
-    .input-group:nth-child(5) {
-      grid-column: 1 / 2;
-      grid-row: 5 / 6;
-    }
-  }
+            h1 {
+                font-size: 1.8rem;
+                grid-column: 1 / 2;
+                grid-row: 1 / 2;
+                text-align: center;
+            }
 
-  .chart-container {
-    opacity: 0;
-    height: 0;
-    transition: all 0.5s ease;
-  }
+            .input-group label {
+                font-size: 0.85rem;
+            }
 
-  .chart-container.visible {
-    opacity: 1;
-    height: auto;
-  }
+            .input-group textarea,
+            .input-group input {
+                font-size: 0.95rem;
+            }
 
-  #frequencyAnalysis {
-    font-family: var(--font-mono);
-    font-size: 0.9rem;
-    line-height: 1.6;
-  }
+            button {
+                font-size: 0.85rem;
+            }
 
-  .drag-active {
-    border: 2px dashed var(--primary-color) !important;
-    background: rgba(98, 0, 234, 0.1) !important;
-  }
+            .input-group:nth-child(3) {
+                grid-column: 1 / 2;
+                grid-row: 2 / 3;
+            }
 
-  .drag-label {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1rem;
-    color: var(--primary-color);
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
+            .input-group:nth-child(4) {
+                grid-column: 1 / 2;
+                grid-row: 3 / 4;
+            }
 
-  .drag-active .drag-label {
-    opacity: 1;
-  }
+            .input-group:nth-child(5) {
+                grid-column: 1 / 2;
+                grid-row: 5 / 6;
+            }
+        }
 
-  .save-btn,.load-btn {
-    background: var(--primary-color);
-    color: var(--on-primary-color);
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    margin-top: 0.5rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .load-btn{
-    background: var(--secondary-color);
-    color: var(--on-secondary-color);
-  }
+        .chart-container {
+            opacity: 0;
+            height: 0;
+            transition: all 0.5s ease;
+        }
 
-  .save-btn:hover,.load-btn:hover {
-    transform: translateY(-2px);
-  }
+        .chart-container.visible {
+            opacity: 1;
+            height: auto;
+        }
 
-  .input-group:nth-child(2) {
-    grid-row: 1 / 2;
-  }
+        #frequencyAnalysis {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
 
-  .input-group:nth-child(3) {
-    grid-column: 1 / 2;
-    grid-row: 2 / 3;
-  }
+        .drag-active {
+            border: 2px dashed var(--primary-color) !important;
+            background: rgba(98, 0, 234, 0.1) !important;
+        }
 
-  .input-group:nth-child(4) {
-    grid-row: 2 / 3;
-  }
+        .drag-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1rem;
+            color: var(--primary-color);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
 
-  .input-group:nth-child(5) {
-    grid-row: 3 / 4;
-  }
-  #output{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-</style>
+        .drag-active .drag-label {
+            opacity: 1;
+        }
+
+        .save-btn,
+        .load-btn {
+            background: var(--primary-color);
+            color: var(--on-primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .load-btn {
+            background: var(--secondary-color);
+            color: var(--on-secondary-color);
+        }
+
+        .save-btn:hover,
+        .load-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .input-group:nth-child(2) {
+            grid-row: 1 / 2;
+        }
+
+        .input-group:nth-child(3) {
+            grid-column: 1 / 2;
+            grid-row: 2 / 3;
+        }
+
+        .input-group:nth-child(4) {
+            grid-row: 2 / 3;
+        }
+
+        .input-group:nth-child(5) {
+            grid-row: 3 / 4;
+        }
+
+        #output {
+            position: relative;
+            min-height: 200px;
+        }
+
+        .dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .dialog {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90%;
+            overflow-y: auto;
+        }
+
+        .dialog table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .dialog table th,
+        .dialog table td {
+            border: 1px solid #e2e8f0;
+            padding: 0.5rem;
+            text-align: center;
+        }
+
+        .dialog table th {
+            background: var(--primary-color);
+            color: var(--on-primary-color);
+        }
+
+        .dialog-close {
+            background: var(--error-color);
+            color: var(--on-error-color);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dialog-close:hover {
+            transform: translateY(-2px);
+        }
+
+        button.move-btn {
+            max-width: 32px;
+            max-height: 32px;
+            background: var(--secondary-color);
+            color: var(--on-primary-color);
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            position: absolute;
+            bottom: 14px;
+            right: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .move-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            opacity: 1;
+        }
+
+        #result {
+            padding-bottom: 48px !important; /* Make space for the button */
+        }
+    </style>
 </head>
+
 <body>
-  <div class="container">
-  <h1>Chiffre de Vigenère 🔐</h1>
-  <div class="input-group">
-    <label for="key">Clé secrète</label>
-    <input type="text" id="key" placeholder="Entrez votre clé...">
-  </div>
-  <div class="button-group">
-    <button class="btn-encrypt" onclick="encrypt()">Chiffrer 🔒</button>
-    <button class="btn-decrypt" onclick="decrypt()">Déchiffrer avec clé 🔑</button>
-    <button class="btn-analyze" onclick="analyze()">Déchiffrer 🔓 <br> Méthode de Babbage</button>
-    <button class="btn-analyze" onclick="analyze2()">Déchiffrer 🔓 <br> Méthode de l'Indice de Coïncidence</button>
-  </div>
-  <div class="input-group">
-    <label for="text">Entrée</label>
-    <textarea id="text" rows="4" placeholder="Entrez votre message ici ou glissez-déposez un fichier .txt..."></textarea>
-    <div class="drag-label">Déposez votre fichier .txt ici</div>
-  </div>
-  <div id="output" class="input-group">
-    <div>
-      <label for="result">Sortie</label>
-      <textarea id="result" rows="4" readonly></textarea>
+    <div class="container">
+        <h1>Chiffre de Vigenère 🔐</h1>
+        <div class="input-group">
+            <input type="text" id="key" placeholder="Entrez votre clé...">
+            <label for="key">Clé secrète</label>
+        </div>
+        <div class="button-group">
+            <button class="btn-encrypt" onclick="encrypt()" title="Chiffrer le texte avec la clé secrète">Chiffrer 🔒</button>
+            <button class="btn-decrypt" onclick="decrypt()" title="Déchiffrer le texte avec la clé secrète">Déchiffrer avec clé 🔑</button>
+            <button class="btn-analyze" onclick="analyze()" title="Déchiffrer le texte sans clé en utilisant la méthode de Babbage (analyse des motifs répétés)">Déchiffrer 🔓 <br> Méthode de Babbage</button>
+            <button class="btn-analyze" onclick="analyze2()" title="Déchiffrer le texte sans clé en utilisant l'indice de coïncidence">Déchiffrer 🔓 <br> Méthode de l'Indice de Coïncidence</button>
+        </div>
+        <div class="input-group">
+            <textarea id="text" rows="4"
+            placeholder="Entrez votre message ici ou glissez-déposez un fichier .txt..."></textarea>
+            <label for="text">Entrée</label>
+            <div class="drag-label">Déposez votre fichier .txt ici</div>
+        </div>
+        <div id="output" class="input-group">
+            <div style="position: relative;">
+                <textarea id="result" rows="4" readonly></textarea>
+                <label for="result">Sortie</label>
+                <button onclick="moveToInput()" class="move-btn" title="Copier le texte de sortie vers l'entrée">⬆️</button>
+            </div>
+            <div>
+                <button onclick="saveToFile()" class="save-btn" title="Sauvegarder le résultat dans un fichier texte">💾 Enregistrer le résultat</button>
+                <button onclick="loadExamaple()" class="load-btn" title="Charger un exemple de texte">📝 Charger un exemple de texte</button>
+                <button class="load-btn" onclick="showTable()" title="Afficher le tableau d'analyse des distances">❎ Afficher le tableau</button>
+            </div>
+        </div>
+        <div class="dialog-overlay" id="dialogOverlay">
+            <div style="height: 800px;" class="dialog">
+                <button class="dialog-close" onclick="closeDialog()" title="Fermer la fenêtre du tableau">Fermer</button>
+                <div style="max-height: 400px; overflow-y: auto;">
+                    <table id="tableContent"></table>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            let table = [];
+
+            // Add English letter frequencies (in percentage)
+            const frenchFrequencies = {
+                'A': 0.084, 'B': 0.0106, 'C': 0.0303, 'D': 0.0418, 'E': 0.1726, 'F': 0.0112,
+                'G': 0.0127, 'H': 0.0092, 'I': 0.0734, 'J': 0.0031, 'K': 0.0005, 'L': 0.0601,
+                'M': 0.0296, 'N': 0.0713, 'O': 0.0526, 'P': 0.0301, 'Q': 0.0099, 'R': 0.0655,
+                'S': 0.0808, 'T': 0.0707, 'U': 0.0574, 'V': 0.0132, 'W': 0.0004, 'X': 0.0045,
+                'Y': 0.0030, 'Z': 0.0012
+            };
+            const frenchFreq ="e s a i t n r u l o d c m p é v q f b g h j à x è y ê z ç ô ù â û î œ w k ï ë ü æ ñ".toUpperCase().replace(/[^A-Z]/g, "");
+            console.log(frenchFreq);
+            function loadExamaple() {
+                document.getElementById("result").value = "";
+                document.getElementById("text").value = "L’exploration spatiale, l’une des quêtes les plus audacieuses et inspirantes de l’humanité, incarne la curiosité, l’ingéniosité et la poursuite inlassable de l’inconnu. Tout a commencé en 1957 avec le lancement de Spoutnik, un petit satellite qui a déclenché la course à l’espace et transformé à jamais notre rapport à l’univers. Douze ans plus tard, l’empreinte de Neil Armstrong sur la Lune symbolisait un triomphe de la science et de la collaboration, prouvant que l’impossible pouvait devenir réalité. Aujourd’hui, l’exploration spatiale transcende les rivalités politiques, avec la Station spatiale internationale (ISS) comme preuve de la coopération mondiale entre 15 nations. Des robots pionniers comme le rover Perseverance de la NASA parcourent Mars, analysant le sol et cherchant des traces de vie ancienne, tandis que les sondes Voyager s’aventurent au-delà de notre système solaire. Le programme Artemis vise à ramener des humains sur la Lune d’ici 2025, cette fois pour y établir des bases durables et tester des technologies en vue de missions vers Mars. Des entreprises privées comme SpaceX révolutionnent l’accès à l’espace avec des fusées réutilisables et des projets ambitieux de colonisation de Mars via le vaisseau Starship. Blue Origin et Virgin Galactic, quant à elles, se concentrent sur le tourisme spatial, offrant aux civils un aperçu éphémère de la courbure de la Terre et du vide cosmique. Au-delà des États-Unis, des agences comme l’ESA, Roscosmos, l’ISRO et la CNSA contribuent par des satellites, des sondes lunaires et des recherches de pointe à cet effort mondial. Les découvertes se multiplient : des milliers d’exoplanètes, des trous noirs mystérieux et la présence d’eau sur des corps célestes suggèrent un univers riche en possibilités. Les technologies spatiales profitent également à la Terre : le GPS, les prévisions météorologiques et les avancées médicales doivent leur précision aux innovations issues de la recherche spatiale. Pourtant, des défis persistent : les débris spatiaux encombrent l’orbite terrestre, menaçant les satellites, tandis que les questions d’éthique et de gouvernance concernant l’exploitation des ressources restent sans réponse. La colonisation de Mars présente des obstacles—rayonnement, températures extrêmes et pression psychologique—mais les scientifiques imaginent des habitats en dôme et des solutions de terraformation. Les systèmes de survie durables, comme l’agriculture en circuit fermé et le recyclage de l’oxygène, sont essentiels pour une présence humaine à long terme au-delà de la Terre. L’IA et la robotique joueront un rôle clé, entretenant les infrastructures et aidant à explorer des environnements trop hostiles pour les humains. La recherche de vie extraterrestre motive des missions vers Europe et Encelade, des lunes glacées aux océans souterrains qui pourraient abriter des organismes microbiens. Des projets comme le télescope spatial James Webb plongent plus profondément dans l’histoire cosmique, révélant les origines des galaxies et la structure de l’espace-temps. Plus près de nous, les satellites surveillent le changement climatique, traquant la fonte des calottes glaciaires et la déforestation, soulignant la fragilité de notre planète. Il est crucial de concilier exploration et préservation : alors que nous visons les étoiles, protéger les écosystèmes terrestres reste une mission urgente. L’espace inspire l’art, la littérature et la philosophie, nous invitant à réfléchir à la place de l’humanité dans l’immensité de l’univers. Les programmes éducatifs et les récits de science-fiction nourrissent l’imaginaire des jeunes, cultivant la prochaine génération d’astronautes, d’ingénieurs et de rêveurs. Si certains doutent du coût, les récompenses intangibles—unité, innovation et espoir—sont inestimables. L’avenir de l’exploration spatiale est incertain mais regorge de potentiel : des villes lunaires, des voyages interstellaires ou un contact avec des civilisations extraterrestres. Chaque étape nous rappelle que la curiosité est le moteur du progrès, et que le cosmos est une toile pour les aspirations les plus audacieuses de l’humanité. Alors que nous nous tenons au seuil d’une nouvelle ère, les étoiles nous appellent—non seulement comme des destinations, mais comme des miroirs reflétant notre potentiel illimité.";}
+            function encrypt() {
+                let text = document.getElementById("text").value.toUpperCase().replace(/[^A-Z]/g, "");
+                console.log("text : ", text);
+                let key = document.getElementById("key").value.toUpperCase();
+                let result = "";
+                let keyIndex = 0;
+
+                for (let i = 0; i < text.length; i++) {
+                    let charCode = text.charCodeAt(i);
+                    if (charCode >= 65 && charCode <= 90) {
+                        let keyCharCode = key.charCodeAt(keyIndex % key.length) - 65;
+                        let encryptedCharCode = ((charCode - 65 + keyCharCode) % 26) + 65;
+                        result += String.fromCharCode(encryptedCharCode);
+                        keyIndex++;
+                    } else {
+                        result += text[i];
+                    }
+                }
+                document.getElementById("result").value = result;
+
+                async function writeKeyWithDelay(key) {
+                    const Result = document.getElementById("result");
+                    Result.focus();
+                    Result.value = "";
+                    let temp=""
+                    for (let i = 0; i < result.length; i++) {
+                        if ((i!=0) && ((i) % 5 === 0)) {
+                            temp += " ";
+                        }
+                        temp += result[i];
+                    }
+                    Result.value = temp;
+                }
+
+                writeKeyWithDelay(key);
+            }
+
+            function decrypt() {
+                let text = document.getElementById("text").value.toUpperCase().replace(/[^A-Z]/g, "");
+                console.log("text : ", text);
+                let key = document.getElementById("key").value.toUpperCase();
+                let result = "";
+                let keyIndex = 0;
+
+                for (let i = 0; i < text.length; i++) {
+                    let charCode = text.charCodeAt(i);
+                    if (charCode >= 65 && charCode <= 90) {
+                        let keyCharCode = key.charCodeAt(keyIndex % key.length) - 65;
+                        let decryptedCharCode = ((charCode - 65 - keyCharCode + 26) % 26) + 65;
+                        result += String.fromCharCode(decryptedCharCode);
+                        keyIndex++;
+                    } else {
+                        result += text[i];
+                    }
+                }
+                document.getElementById("result").value = result;
+                async function writeKeyWithDelay(key) {
+                    const Resultoutput = document.getElementById("result");
+                    Resultoutput.focus();
+                    let temp=""
+                    for (let i = 0; i < result.length; i++) {
+                        if ((i!=0) && ((i) % 5 === 0)) {
+                            temp += " ";
+                        }
+                        temp += result[i];
+                    }
+                    Resultoutput.value = temp;
+                }
+
+                writeKeyWithDelay(key);
+            }
+           
+            function findRepeatingPatterns(text, n = 3, m = 5) {
+                const patterns = {};
+                // Iterate through different n-gram lengths
+                for (let len = n; len <= m; len++) {
+                    // For each length, find all n-grams
+                    for (let i = 0; i <= text.length - len; i++) {
+                        const ngram = text.substring(i, i + len);
+                        patterns[ngram] = (patterns[ngram] || []).concat(i);
+                    }
+                }
+                return Object.entries(patterns).filter(([, positions]) => positions.length > 1);
+            }
+
+            function calculateDistances(text, patterns) {
+                const distances = [];
+                for (const [, positions] of patterns) {
+                    for (let i = 1; i < positions.length; i++) {
+                        distances.push(positions[i] - positions[i - 1]);
+                    }
+                }
+                return distances;
+            }
+
+            function factorDistances(distances) {
+                return distances.map(distance => {
+                    const factors = [];
+                    for (let i = 3; i < distance; i++) {
+                        if (distance % i === 0) {
+                                factors.push(i);
+                        }
+                    }
+                    return factors;
+                });
+            }
+
+            function frequencyAnalysis(text) {
+                const frequencies = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0, G: 0, H: 0, I: 0, J: 0, K: 0, L: 0, M: 0, N: 0, O: 0, P: 0, Q: 0, R: 0, S: 0, T: 0, U: 0, V: 0, W: 0, X: 0, Y: 0, Z: 0 };
+                for (const char of text) {
+                    frequencies[char] = (frequencies[char] || 0) + 1;
+                }
+                const total = text.length;
+                for (const char in frequencies) {
+                    frequencies[char] = frequencies[char] / total;
+                }
+                return frequencies;
+            }
+
+
+            function analyze() {
+                const text = document.getElementById("text").value.toUpperCase().replace(/[^A-Z]/g, "");
+                document.getElementById("result").value = "";
+                const patterns = findRepeatingPatterns(text, n = 2, m =20);
+                console.log("patterns :", patterns);
+
+                const distances = calculateDistances(text, patterns);
+                console.log("distances :", distances);
+
+                const factors = factorDistances(distances);
+                console.log("factors :", factors);
+                // Find most common factor for key length
+                const factorCounts = {};
+                factors.flat().forEach(f => factorCounts[f] = (factorCounts[f] || 0) + 1);
+
+                const maxDistance = 15
+                table.push(['Total :',2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+                table.push(['Facteur :',2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+                distances.forEach(distance => {
+                    const row = [distance];
+                    for (let i = 2; i <= maxDistance; i++) {
+                        const cell = distance % i === 0 ? "X" : " ";
+                        row.push(cell);
+                    }
+                    table.push(row);
+                });
+                for (let i = 2; i < maxDistance; i++) {
+                    let total = 0;
+                        for (let j = 1; j < table.length; j++) {
+                            if (table[j][i] === "X") {
+                                total += 1;
+                            }
+                        }
+                        table[0][i] = total;
+                    }
+
+                // console.table(table);
+                
+                console.log("keys : ", factorCounts);
+                // filter out factors that are less than 3
+                for (const key in factorCounts) {
+                    if (key < 3) {
+                        delete factorCounts[key];
+                    }
+                }
+                console.log("keys : ", factorCounts);
+
+                const keyLength = parseInt(Object.entries(factorCounts)
+                    .sort(([, a], [, b]) => b - a)[0][0]);
+                console.log("key : ", keyLength);
+
+                // Divide text into subsequences
+                const subsequences = [];
+                for (let j = 0; j < text.length; j += keyLength) {
+                    let subsequence = '';
+                    for (let i = 0; i < keyLength; i++) {
+                        subsequence += text[j + i];
+                    }
+                    subsequences.push(subsequence);
+                }
+                console.log("subsequences :");
+                console.log(subsequences);
+
+                // Find key using frequency analysis
+                let key = "";
+                // for(let i=0;i<1;i++){
+                for (let i = 0; i < keyLength; i++) {
+                    let tempText = '';
+                    for (let j = 0; j < subsequences.length; j++) {
+                        tempText += subsequences[j][i];
+                    }
+                    let freq = frequencyAnalysis(tempText);
+                    // find index of max freq char
+                    let max = 0;
+                    let index = 1;
+                    let maxIndex = 0;
+                    let maxChar = '';
+                    for (const char in freq) {
+                        if (freq[char] > max) {
+                            max = freq[char];
+                            maxChar = char;
+                            maxIndex = index;
+                        }
+                        index++;
+                    }
+                    console.log(freq)
+                    console.log("maxChar : ", maxChar, " index : ", maxIndex);
+                    console.log("freq : ", freq);
+
+                    
+                    let shift = maxChar.charCodeAt(0) - 'E'.charCodeAt(0);
+
+                    if (shift < 0) {
+          
+                        key += String.fromCharCode(((26 + 22 - shift) % 26) + 65);
+                        console.log("shift : ", shift,"code",((26 +22 - shift) % 26), " kEYChar : ", String.fromCharCode(((26 - shift+22) % 26) + 65));
+                    } else {
+                        console.log("shift : ", shift,"code",((26 + shift) % 26), " kEYChar : ", String.fromCharCode(((26 + shift) % 26) + 65));
+                        key += String.fromCharCode(((26 + shift) % 26) + 65);
+                        // key += String.fromCharCode(shift + 65);
+                    }
+
+                }
+                    // A B C D E F G H I J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z
+                    // 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26
+                   
+
+                // document.getElementById("key").value = key;
+                async function writeKeyWithDelay(key) {
+                    const keyInput = document.getElementById("key");
+                    keyInput.focus();
+                    keyInput.value = "";
+                    for (let i = 0; i < key.length; i++) {
+                        keyInput.value += key[i];
+                        await new Promise(resolve => setTimeout(resolve, 5)); // 300ms delay
+                    }
+                    decrypt();
+                }
+                writeKeyWithDelay(key);
+            }
+            function analyze2() {
+                const text = document.getElementById("text").value.toUpperCase().replace(/[^A-Z]/g, "");
+                document.getElementById("result").value = "";
+                FrenchIC = 0.074;
+                let keyLength = 0;
+                let minDiff = 1;
+                for (let i = 0; i < 10; i++) {
+                    let result = "";
+                    for (let j = 0; j < text.length; j += (i + 1)) {
+                        result += text[j];
+                    }
+                    let NI = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0, G: 0, H: 0, I: 0, J: 0, K: 0, L: 0, M: 0, N: 0, O: 0, P: 0, Q: 0, R: 0, S: 0, T: 0, U: 0, V: 0, W: 0, X: 0, Y: 0, Z: 0 };
+                    for (const char of result) {
+                        NI[char] = (NI[char] || 0) + 1;
+                    }
+                    let ic = 0;
+                    for (const char in NI) {
+                        ic += NI[char] * (NI[char] - 1);
+                    }
+                    ic /= result.length * (result.length - 1);
+                    if (Math.abs(ic - FrenchIC) < minDiff) {
+                        minDiff = Math.abs(ic - FrenchIC);
+                        keyLength = i + 1;
+                        if (minDiff < 0.015) {
+                            console.log("=============keyLength : ", keyLength);
+                            i = 15;
+                        }
+                    }
+
+
+                }
+                console.log("keyLength : ", keyLength);
+                let msgs = []
+                let key = "";
+                for (let i = 0; i < keyLength; i++) {
+                    msg = "";
+                    for (let j = i; j < text.length; j += keyLength) {
+                        msg += text[j];
+                    }
+                    msgs.push(msg);
+                    let freq = frequencyAnalysis(msg);
+                    let maxFreq = 0;
+                    let maxChar = '';
+                    for (const char in freq) {
+                        if (freq[char] > maxFreq) {
+                            maxFreq = freq[char];
+                            maxChar = char;
+                        }
+                    }
+                    console.log("maxChar : ", maxChar);
+                    // let shift = (maxChar.charCodeAt(0) - 'E'.charCodeAt(0) + 26) % 26;
+                    // console.log("shift : ", shift);
+                    // key += String.fromCharCode(((26 + shift) % 26) + 65);
+                    let shift = (maxChar.charCodeAt(0) - 'E'.charCodeAt(0));
+                    console.log("shift : ", shift);
+
+                    // key += String.fromCharCode(((26 + shift) % 26) + 65);
+                    //handle negative shift
+                    if (shift < 0) {
+                        key += String.fromCharCode(((26 + 22 - shift) % 26) + 65);
+
+                        // key += String.fromCharCode(((26 - shift) % 26) + 65);
+                    } else {
+                        key += String.fromCharCode(((26 + shift) % 26) + 65);
+                    }
+                }
+                // console.log("msgs : ",msgs);
+                console.log("key : ", key);
+                async function writeKeyWithDelay(key) {
+                    const keyInput = document.getElementById("key");
+                    keyInput.focus();
+                    keyInput.value = "";
+                    for (let i = 0; i < key.length; i++) {
+                        keyInput.value += key[i];
+                        await new Promise(resolve => setTimeout(resolve, 5));
+                    }
+                    decrypt();
+                }
+                writeKeyWithDelay(key);
+            }
+            // Add drag and drop functionality
+            const textArea = document.getElementById('text');
+            const dragLabel = document.querySelector('.drag-label');
+
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                textArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                textArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                textArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight(e) {
+                textArea.classList.add('drag-active');
+            }
+
+            function unhighlight(e) {
+                textArea.classList.remove('drag-active');
+            }
+
+            textArea.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const file = dt.files[0];
+
+                if (file && file.type === 'text/plain') {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        textArea.value = e.target.result;
+                    };
+                    reader.readAsText(file);
+                }
+            }
+
+            // Add save functionality
+            function saveToFile() {
+                const result = document.getElementById('result').value;
+                if (!result) return;
+
+                const blob = new Blob([result], { type: 'text/plain' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'cipher-result.txt';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }
+
+            function showTable() {
+                const tableContent = document.getElementById('tableContent');
+                tableContent.innerHTML = '';
+
+                const thead = document.createElement('thead');
+                const tbody = document.createElement('tbody');
+
+                table.forEach((row, index) => {
+                    const tr = document.createElement('tr');
+                    row.forEach(cell => {
+                        const cellElement = index === 0 ? document.createElement('th') : document.createElement('td');
+                        cellElement.textContent = cell;
+                        tr.appendChild(cellElement);
+                    });
+                    if (index === 0) {
+                        thead.appendChild(tr);
+                    } else {
+                        tbody.appendChild(tr);
+                    }
+                });
+
+                tableContent.appendChild(thead);
+                tableContent.appendChild(tbody);
+
+                document.getElementById('dialogOverlay').style.display = 'flex';
+            }
+
+            function closeDialog() {
+                document.getElementById('dialogOverlay').style.display = 'none';
+            }
+
+            function moveToInput() {
+                const result = document.getElementById("result").value;
+                if (result) {
+                    document.getElementById("text").value = result;
+                    document.getElementById("result").value = "";
+                }
+            }
+        </script>
     </div>
-    <div>
-      <button onclick="saveToFile()" class="save-btn">💾 Enregistrer le résultat </button>
-      <button onclick="loadExamaple()" class="load-btn">📝 Charger un exemple de texte </button>
-    </div>
-    <!-- <button onclick="saveToFile()" class="save-btn">💾 Save output </button> -->
-  </div>
-
-
-  <script>
-    // Add English letter frequencies (in percentage)
-    const frenchFrequencies = {
-      'A': 0.084, 'B': 0.0106, 'C': 0.0303, 'D': 0.0418, 'E': 0.1726, 'F': 0.0112, 
-      'G': 0.0127, 'H': 0.0092, 'I': 0.0734, 'J': 0.0031, 'K': 0.0005, 'L': 0.0601, 
-      'M': 0.0296, 'N': 0.0713, 'O': 0.0526, 'P': 0.0301, 'Q': 0.0099, 'R': 0.0655, 
-      'S': 0.0808, 'T': 0.0707, 'U': 0.0574, 'V': 0.0132, 'W': 0.0004, 'X': 0.0045, 
-      'Y': 0.0030, 'Z': 0.0012
-    };
-    function loadExamaple(){
-      document.getElementById("result").value = "";
-      document.getElementById("text").value ="Souvent pour s'amuser, les hommes d'équipage prennent des albatros, vastes oiseaux des mers, qui suivent, indolents compagnons de voyage, le navire glissant sur les gouffres amers. A peine les ont-ils déposés sur les planches que ces rois de l'azur, maladroits et honteux, laissent piteusement leurs grandes ailes blanches, comme des avirons, traîner à côté d'eux. Ce voyageur ailé, comme il est gauche et veule! Lui naguère si beau, qu'il est comique et laid! L'un agace son bec avec un brûle-gueule, l'autre mime en boitant l'infirme qui volait. Le poète est semblable au prince des nuées, qui hante la tempête et se rit de l'archer.";
-    }
-    function encrypt() {
-      let text = document.getElementById("text").value.toUpperCase().replace(/[^A-Z]/g, "");
-      console.log("text : ",text);
-      let key = document.getElementById("key").value.toUpperCase();
-      let result = "";
-      let keyIndex = 0;
-
-      for (let i = 0; i < text.length; i++) {
-        let charCode = text.charCodeAt(i);
-        if (charCode >= 65 && charCode <= 90) {
-          let keyCharCode = key.charCodeAt(keyIndex % key.length) - 65;
-          let encryptedCharCode = ((charCode - 65 + keyCharCode) % 26) + 65;
-          result += String.fromCharCode(encryptedCharCode);
-          keyIndex++;
-        } else {
-          result += text[i];
-        }
-      }
-      document.getElementById("result").value = result;
-
-      async function writeKeyWithDelay(key) {
-        const Result=document.getElementById("result");
-        Result.focus();
-        Result.value = "";
-        for (let i = 0; i < result.length; i++) {
-          Result.value += result[i];
-          await new Promise(resolve => setTimeout(resolve, 5)); // 30ms delay
-        }
-      }
-
-      writeKeyWithDelay(key);
-    }
-
-    function decrypt() {
-      let text = document.getElementById("text").value.toUpperCase().replace(/[^A-Z]/g, "");
-      console.log("text : ",text);
-      let key = document.getElementById("key").value.toUpperCase();
-      let result = "";
-      let keyIndex = 0;
-
-      for (let i = 0; i < text.length; i++) {
-        let charCode = text.charCodeAt(i);
-        if (charCode >= 65 && charCode <= 90) {
-          let keyCharCode = key.charCodeAt(keyIndex % key.length) - 65;
-          let decryptedCharCode = ((charCode - 65 - keyCharCode + 26) % 26) + 65;
-          result += String.fromCharCode(decryptedCharCode);
-          keyIndex++;
-        } else {
-          result += text[i];
-        }
-      }
-      document.getElementById("result").value = result;
-      async function writeKeyWithDelay(key) {
-        const Resultoutput=document.getElementById("result");
-        Resultoutput.focus();
-        Resultoutput.value = "";
-        for (let i = 0; i < result.length; i++) {
-          Resultoutput.value += result[i];
-          await new Promise(resolve => setTimeout(resolve, 5)); // 30ms delay
-        }
-      }
-
-      writeKeyWithDelay(key);
-    }
-
-    function findRepeatingPatterns(text, n = 3, m = 5) {
-      const patterns = {};
-      // Iterate through different n-gram lengths
-      for (let len = n; len <= m; len++) {
-        // For each length, find all n-grams
-        for (let i = 0; i <= text.length - len; i++) {
-          const ngram = text.substring(i, i + len);
-          patterns[ngram] = (patterns[ngram] || []).concat(i);
-        }
-      }
-      return Object.entries(patterns).filter(([, positions]) => positions.length > 1);
-    }
-
-    function calculateDistances(text, patterns) {
-      const distances = [];
-      for (const [, positions] of patterns) {
-      for (let i = 1; i < positions.length; i++) {
-        distances.push(positions[i] - positions[i - 1]);
-      }
-      }
-      return distances;
-    }
-
-    function factorDistances(distances) {
-      return distances.map(distance => {
-      const factors = [];
-      for (let i = 2; i <= distance; i++) {
-        while (distance % i === 0) {
-        if (!factors.includes(i)) {
-          factors.push(i);
-        }
-        distance /= i;
-        }
-      }
-      return factors;
-      });
-    }
-
-    function frequencyAnalysis(text) {
-      const frequencies = {A: 0, B: 0, C: 0, D: 0, E: 0, F: 0, G: 0, H: 0, I: 0, J: 0, K: 0, L: 0, M: 0, N: 0, O: 0, P: 0, Q: 0, R: 0, S: 0, T: 0, U: 0, V: 0, W: 0, X: 0, Y: 0, Z: 0};
-      for (const char of text) {
-      frequencies[char] = (frequencies[char] || 0) + 1;
-      }
-      const total = text.length;
-      for (const char in frequencies) {
-      frequencies[char] = frequencies[char] / total;
-      }
-      return frequencies;
-    }
-
-
-    function analyze() {
-      const text = document.getElementById("text").value.toUpperCase().replace(/[^A-Z]/g, "");
-      document.getElementById("result").value = "";
-      const patterns = findRepeatingPatterns(text,n=3,m=7);
-      console.log("patterns :",patterns);
-
-      const distances = calculateDistances(text, patterns);
-      console.log("distances :",distances);
-
-      const factors = factorDistances(distances);
-      console.log("factors :",factors);      
-      // Find most common factor for key length
-      const factorCounts = {};
-      factors.flat().forEach(f => factorCounts[f] = (factorCounts[f] || 0) + 1);
-
-      console.log("keys : ",factorCounts);
-      // filter out factors that are less than 3
-      for (const key in factorCounts) {
-        if (key <= 3) {
-          delete factorCounts[key];
-        }
-      }
-      console.log("keys : ",factorCounts);
-
-      const keyLength = parseInt(Object.entries(factorCounts)
-      .sort(([,a], [,b]) => b - a)[0][0]);
-      console.log("key : ",keyLength);
-
-      // Divide text into subsequences
-      const subsequences = [];
-      for (let j = 0; j < text.length; j += keyLength) {
-        let subsequence = '';
-      for (let i = 0; i < keyLength; i++) {
-          subsequence += text[j+i];
-        }
-        subsequences.push(subsequence);
-      }
-      console.log("subsequences :");
-      console.log(subsequences);
-
-      // Find key using frequency analysis
-      let key = "";
-      // for(let i=0;i<1;i++){
-      for(let i=0;i<keyLength;i++){
-        let tempText='';
-        for(let j=0;j<subsequences.length;j++){
-          tempText+=subsequences[j][i];
-        }
-        let freq = frequencyAnalysis(tempText);
-        // find index of max freq char
-        let max = 0;
-        let index = 1;
-        let maxIndex = 0;
-        let maxChar = '';
-        for (const char in freq) {
-          if (freq[char] > max) {
-            max = freq[char];
-            maxChar = char;
-            maxIndex = index;
-          }
-          index++;
-        }
-        console.log("maxChar : ",maxChar," index : ",maxIndex);  
-        console.log("freq : ",freq);
-        E_index= 5;
-        // let shift = (maxChar.charCodeAt(0) - 'E'.charCodeAt(0) + 26) % 26;
-        let shift = Math.abs(maxChar.charCodeAt(0) - 'E'.charCodeAt(0));
-        console.log("shift : ",shift);
-
-      // key += String.fromCharCode(((26 + shift) % 26) + 65);
-      //handle negative shift
-      if(shift<0){
-        // key += String.fromCharCode(((26 - shift) % 26) +shift + 65);
-        
-        // key += String.fromCharCode(-shift - 4 + 65);
-      key += String.fromCharCode(((26 + shift) % 26) + 65);
-    }else{
-      key += String.fromCharCode(((26 + shift) % 26) + 65);
-        // key += String.fromCharCode(shift + 65);
-      }
-
-      }
-      
-
-      // document.getElementById("key").value = key;
-      async function writeKeyWithDelay(key) {
-        const keyInput = document.getElementById("key");
-        keyInput.focus();
-        keyInput.value = "";
-        for (let i = 0; i < key.length; i++) {
-          keyInput.value += key[i];
-          await new Promise(resolve => setTimeout(resolve, 200)); // 300ms delay
-        }
-        decrypt();
-      }
-      writeKeyWithDelay(key);
-    }
-    function analyze2() {
-      const text = document.getElementById("text").value.toUpperCase().replace(/[^A-Z]/g, "");
-      document.getElementById("result").value = "";
-    FrenchIC= 0.074;
-    let keyLength = 0;
-    let minDiff = 1;
-    for(let i=0;i<10;i++){
-      let result = "";
-      for (let j = 0; j < text.length; j += (i + 1)) {
-        result += text[j];
-      }
-      let NI = {A: 0, B: 0, C: 0, D: 0, E: 0, F: 0, G: 0, H: 0, I: 0, J: 0, K: 0, L: 0, M: 0, N: 0, O: 0, P: 0, Q: 0, R: 0, S: 0, T: 0, U: 0, V: 0, W: 0, X: 0, Y: 0, Z: 0};
-      for (const char of result) {
-        NI[char] = (NI[char] || 0) + 1;
-      }
-      let ic = 0;
-      for (const char in NI) {
-        ic += NI[char] * (NI[char] - 1);
-      }
-      ic /= result.length * (result.length - 1);
-      if(Math.abs(ic-FrenchIC)<minDiff){
-        minDiff = Math.abs(ic-FrenchIC);
-        keyLength = i+1;
-        if(minDiff<0.01){
-          console.log("=============keyLength : ",keyLength);
-          i=15;
-        }
-      }
-      
-      
-    }
-    console.log("keyLength : ",keyLength);
-    let msgs=[]
-    let key = "";
-    for(let i=0;i<keyLength;i++){
-      msg = "";
-      for (let j = i; j < text.length; j +=  keyLength ) {
-        msg += text[j];
-      }
-      msgs.push(msg);
-      let freq = frequencyAnalysis(msg);
-      let maxFreq = 0;
-      let maxChar = '';
-      for (const char in freq) {
-        if (freq[char] > maxFreq) {
-          maxFreq = freq[char];
-          maxChar = char;
-        }
-      }
-      console.log("maxChar : ", maxChar);
-      // let shift = (maxChar.charCodeAt(0) - 'E'.charCodeAt(0) + 26) % 26;
-      // console.log("shift : ", shift);
-      // key += String.fromCharCode(((26 + shift) % 26) + 65);
-      let shift = (maxChar.charCodeAt(0) - 'E'.charCodeAt(0)) ;
-      console.log("shift : ",shift);
-
-      // key += String.fromCharCode(((26 + shift) % 26) + 65);
-      //handle negative shift
-      if(shift<0){
-        key += String.fromCharCode(-shift - 4 + 65);
-      }else{
-        key += String.fromCharCode(((26 + shift) % 26) + 65);
-      }
-    }
-    // console.log("msgs : ",msgs);
-    console.log("key : ",key);
-    async function writeKeyWithDelay(key) {
-        const keyInput = document.getElementById("key");
-        keyInput.focus();
-        keyInput.value = "";
-        for (let i = 0; i < key.length; i++) {
-          keyInput.value += key[i];
-          await new Promise(resolve => setTimeout(resolve, 200)); // 300ms delay
-        }
-        decrypt();
-      }
-      writeKeyWithDelay(key);
-  }
-    // Add drag and drop functionality
-    const textArea = document.getElementById('text');
-    const dragLabel = document.querySelector('.drag-label');
-
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-      textArea.addEventListener(eventName, preventDefaults, false);
-    });
-
-    function preventDefaults (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-
-    ['dragenter', 'dragover'].forEach(eventName => {
-      textArea.addEventListener(eventName, highlight, false);
-    });
-
-    ['dragleave', 'drop'].forEach(eventName => {
-      textArea.addEventListener(eventName, unhighlight, false);
-    });
-
-    function highlight(e) {
-      textArea.classList.add('drag-active');
-    }
-
-    function unhighlight(e) {
-      textArea.classList.remove('drag-active');
-    }
-
-    textArea.addEventListener('drop', handleDrop, false);
-
-    function handleDrop(e) {
-      const dt = e.dataTransfer;
-      const file = dt.files[0];
-
-      if (file && file.type === 'text/plain') {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          textArea.value = e.target.result;
-        };
-        reader.readAsText(file);
-      }
-    }
-
-    // Add save functionality
-    function saveToFile() {
-      const result = document.getElementById('result').value;
-      if (!result) return;
-
-      const blob = new Blob([result], { type: 'text/plain' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'cipher-result.txt';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-    }
-  </script>
-</div>
 </body>
+
 </html>
